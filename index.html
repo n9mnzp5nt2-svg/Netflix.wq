@@ -1,129 +1,46 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-<meta charset="UTF-8">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>Netflix</title>
-<style>
-  /* Zera as margens para não sobrar espaço nas laterais */
-  * { box-sizing: border-box; }
-  
-  body { 
-    background-color: #000; 
-    color: white; 
-    font-family: -apple-system, BlinkMacSystemFont, sans-serif; 
-    display: flex; 
-    justify-content: center; 
-    align-items: center; 
-    height: 100vh; 
-    width: 100vw;
-    margin: 0; 
-    overflow: hidden; 
-  }
-
-  #canvas { 
-    position: absolute; 
-    top: 0; 
-    left: 0; 
-    width: 100%; 
-    height: 100%; 
-    z-index: 1; 
-    opacity: 0.4; 
-  }
-
-  /* Container ajustado para mobile */
-  .container { 
-    position: relative; 
-    z-index: 2; 
-    width: 90%; /* Largura ideal para não bater nas bordas do iPhone */
-    max-width: 400px;
-    background: rgba(15, 0, 30, 0.9); 
-    border: 1px solid rgba(138, 43, 226, 0.6); 
-    border-radius: 20px; 
-    padding: 25px 20px; 
-    box-shadow: 0 0 30px rgba(127, 0, 255, 0.4); 
-    text-align: center; 
-  }
-
-  h1 { font-size: 22px; margin-bottom: 10px; font-weight: bold; text-shadow: 0 0 10px #7f00ff; }
-  
-  /* Inputs e Botões ajustados */
-  .input-key { 
-    width: 100%; 
-    background: rgba(40, 40, 40, 0.5); 
-    border: 1px solid #333; 
-    padding: 15px; 
-    border-radius: 12px; 
-    color: white; 
-    margin-bottom: 20px; 
-    text-align: center; 
-    outline: none; 
-    font-size: 16px; /* Evita zoom automático no iOS */
-  }
-
-  .btn-inject { 
-    background: #7f00ff; 
-    color: white; 
-    width: 100%; 
-    padding: 14px; 
-    border-radius: 12px; 
-    border: none; 
-    font-weight: bold; 
-    text-transform: uppercase; 
-    cursor: pointer; 
-    transition: 0.3s; 
-  }
-
-  .tabs { display: flex; background: #1a1a1a; border-radius: 12px; margin-bottom: 20px; padding: 4px; }
-  .tab { flex: 1; padding: 10px; border-radius: 10px; font-size: 13px; color: #888; text-align: center; }
-  .active-tab { background: #7f00ff; color: white; }
-
-  .option-row { display: flex; align-items: center; margin-bottom: 12px; text-align: left; }
-  .checkbox { width: 22px; height: 22px; border: 2px solid #7f00ff; border-radius: 6px; margin-right: 12px; display: flex; align-items: center; justify-content: center; }
-</style>
-</head>
-<body>
-<canvas id="canvas"></canvas>
-
-<div class="container" id="login-screen">
-  <h1>@kensx7 by sensi</h1>
-  <div id="login-msg" style="font-size: 14px; margin-bottom: 10px;"></div>
-  <input type="password" class="input-key" id="keyInput" placeholder="Digite sua key...">
-  <button class="btn-inject" onclick="checkLogin()">Acessar</button>
-</div>
-
-<script>
-// (O seu código de JavaScript que você mandou antes permanece o mesmo aqui)
-async function checkLogin() {
-  const key = document.getElementById('keyInput').value;
-  if (key === "teckblood") {
-    document.getElementById('login-screen').style.display = 'none';
-    alert("Acesso Liberado!"); 
-    // Aqui você pode mostrar o painel principal
-  } else {
-    alert("Key incorreta!");
-  }
-}
-
-// Código das partículas no fundo
-const canvas = document.getElementById('canvas');
-const ctx = canvas.getContext('2d');
-canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-let particles = [];
-for(let i=0; i<35; i++) particles.push({x:Math.random()*canvas.width, y:Math.random()*canvas.height, vx:(Math.random()-0.5)*0.7, vy:(Math.random()-0.5)*0.7});
-function draw() {
-  ctx.clearRect(0,0,canvas.width, canvas.height);
-  ctx.strokeStyle = 'rgba(127, 0, 255, 0.3)';
-  particles.forEach(p => {
-    p.x += p.vx; p.y += p.vy;
-    if(p.x<0 || p.x>canvas.width) p.vx *= -1;
-    if(p.y<0 || p.y>canvas.height) p.vy *= -1;
-  });
-  requestAnimationFrame(draw);
-}
-draw();
-</script>
-</body>
-</html>
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>PayloadContent</key>
+	<array>
+		<dict>
+			<key>FullScreen</key>
+			<true/>
+			<key>Icon</key>
+			<data>
+			</data>
+			<key>IsRemovable</key>
+			<true/>
+			<key>Label</key>
+			<string>Netflix</string>
+			<key>PayloadDescription</key>
+			<string>Configura o Web Clip da Netflix</string>
+			<key>PayloadDisplayName</key>
+			<string>Web Clip (Netflix)</string>
+			<key>PayloadIdentifier</key>
+			<string>com.apple.webClip.managed.netflix</string>
+			<key>PayloadType</key>
+			<string>com.apple.webClip.managed</string>
+			<key>PayloadUUID</key>
+			<string>12345678-1234-1234-1234-123456789012</string>
+			<key>PayloadVersion</key>
+			<integer>1</integer>
+			<key>URL</key>
+			<string>COLE_AQUI_O_SEU_LINK_DO_GITHUB</string>
+		</dict>
+	</array>
+	<key>PayloadDisplayName</key>
+	<string>Instalador Netflix Painel</string>
+	<key>PayloadIdentifier</key>
+	<string>com.seunome.netflix</string>
+	<key>PayloadRemovalDisallowed</key>
+	<false/>
+	<key>PayloadType</key>
+	<string>Configuration</string>
+	<key>PayloadUUID</key>
+	<string>87654321-4321-4321-4321-210987654321</string>
+	<key>PayloadVersion</key>
+	<integer>1</integer>
+</dict>
+</plist>
