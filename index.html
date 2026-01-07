@@ -7,38 +7,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Netflix Painel</title>
     <style>
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
         body { background-color: #000; color: white; font-family: -apple-system, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; overflow: hidden; width: 100vw; }
-        #canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; opacity: 0.4; }
+        #canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; opacity: 0.3; }
         
-        .container { position: relative; z-index: 2; width: 88%; max-width: 380px; background: rgba(15, 0, 30, 0.95); border: 1px solid rgba(138, 43, 226, 0.6); border-radius: 20px; padding: 20px; box-shadow: 0 0 30px rgba(127, 0, 255, 0.4); text-align: center; }
+        .container { position: relative; z-index: 2; width: 88%; max-width: 380px; background: rgba(10, 10, 20, 0.98); border: 1px solid #7f00ff; border-radius: 20px; padding: 25px; box-shadow: 0 0 40px rgba(127, 0, 255, 0.5); text-align: center; }
         
-        h1 { font-size: 20px; margin-bottom: 15px; text-shadow: 0 0 10px #7f00ff; }
+        /* Nome da tela de login igual ao original */
+        h1 { font-size: 22px; margin-bottom: 20px; font-weight: bold; text-shadow: 0 0 15px #7f00ff; color: #fff; }
         
-        /* Login */
-        .input-key { width: 100%; background: rgba(40, 40, 40, 0.5); border: 1px solid #333; padding: 15px; border-radius: 12px; color: white; margin-bottom: 20px; text-align: center; outline: none; font-size: 16px; }
+        .input-key { width: 100%; background: #1a1a1a; border: 1px solid #333; padding: 15px; border-radius: 12px; color: white; margin-bottom: 20px; text-align: center; font-size: 16px; }
 
-        /* Tabs */
         #main-panel { display: none; }
-        .tabs { display: flex; background: #1a1a1a; border-radius: 12px; margin-bottom: 15px; padding: 4px; }
-        .tab { flex: 1; padding: 10px; border-radius: 10px; font-size: 13px; color: #888; cursor: pointer; }
-        .active-tab { background: #7f00ff; color: white; }
-
-        /* Funções */
-        .option-row { display: flex; align-items: center; margin-bottom: 10px; text-align: left; font-size: 14px; }
-        .checkbox { width: 20px; height: 20px; border: 2px solid #7f00ff; border-radius: 6px; margin-right: 12px; display: flex; align-items: center; justify-content: center; font-size: 12px; }
-        .checkbox.checked { background: #7f00ff; }
-
-        /* Select e Range */
-        .select-box { background: rgba(40, 40, 40, 0.5); border: 1px solid #333; padding: 10px; border-radius: 10px; color: #ccc; font-size: 13px; margin-bottom: 15px; text-align: left; display: flex; justify-content: space-between; }
-        input[type=range] { width: 100%; margin: 10px 0; accent-color: #7f00ff; }
-
-        /* File Input */
-        .file-box { background: rgba(40, 40, 40, 0.5); border: 1px dashed #7f00ff; padding: 10px; border-radius: 10px; font-size: 11px; color: #888; margin-bottom: 15px; cursor: pointer; }
-
-        .btn-inject { background: #7f00ff; color: white; width: 100%; padding: 14px; border-radius: 12px; border: none; font-weight: bold; text-transform: uppercase; cursor: pointer; }
+        .section-title { font-size: 11px; color: #7f00ff; text-align: left; margin: 10px 0 5px 5px; text-transform: uppercase; font-weight: bold; }
         
-        #info-content { display: none; text-align: left; font-size: 13px; line-height: 1.8; }
+        .option-row { display: flex; align-items: center; background: rgba(255,255,255,0.03); padding: 12px; border-radius: 10px; margin-bottom: 8px; cursor: pointer; border: 1px solid transparent; font-size: 14px; }
+        .checkbox { width: 18px; height: 18px; border: 2px solid #7f00ff; border-radius: 4px; margin-right: 12px; display: flex; align-items: center; justify-content: center; font-size: 12px; }
+        .checkbox.checked { background: #7f00ff; box-shadow: 0 0 10px #7f00ff; }
+
+        /* Menu de Seleção Funcional */
+        .select-container { position: relative; margin-bottom: 15px; }
+        .select-box { background: #1a1a1a; border: 1px solid #333; padding: 12px; border-radius: 10px; font-size: 13px; display: flex; justify-content: space-between; cursor: pointer; }
+        .dropdown-menu { display: none; position: absolute; width: 100%; background: #111; border-radius: 10px; z-index: 100; margin-top: 5px; border: 1px solid #333; }
+        .dropdown-item { padding: 12px; font-size: 13px; border-bottom: 1px solid #222; text-align: left; }
+
+        .btn-inject { background: linear-gradient(45deg, #7f00ff, #a020f0); color: white; width: 100%; padding: 16px; border-radius: 12px; border: none; font-weight: bold; margin-top: 15px; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -47,43 +40,33 @@
     <div class="container" id="login-screen">
         <h1>@kensx7 by sensi</h1>
         <input type="password" class="input-key" id="keyInput" placeholder="Digite sua key...">
-        <button class="btn-inject" onclick="checkLogin()">Acessar</button>
+        <button class="btn-inject" onclick="checkLogin()">ACESSAR</button>
     </div>
 
     <div class="container" id="main-panel">
         <h1>@kensx7 by sensi</h1>
-        <div class="tabs">
-            <div id="tab-func" class="tab active-tab" onclick="switchTab('func')">Funções</div>
-            <div id="tab-info" class="tab" onclick="switchTab('info')">Info.</div>
-        </div>
         
-        <div id="func-content">
-            <div class="option-row" onclick="toggleCheck(this)"><div class="checkbox"></div> Aimbot HS</div>
-            <div class="option-row" onclick="toggleCheck(this)"><div class="checkbox"></div> Precision Aim</div>
-            <div class="option-row" onclick="toggleCheck(this)"><div class="checkbox"></div> No Recoil</div>
+        <div class="section-title">Estabilização</div>
+        <div class="option-row" onclick="toggleCheck(this)"><div class="checkbox"></div> Anti-Shake (Sem Tremedeira)</div>
+        <div class="option-row" onclick="toggleCheck(this)"><div class="checkbox"></div> Fix Lag (Otimizar FPS)</div>
+        
+        <div class="section-title">Precisão</div>
+        <div class="option-row" onclick="toggleCheck(this)"><div class="checkbox"></div> Calibração Regedit</div>
+        <div class="option-row" onclick="toggleCheck(this)"><div class="checkbox"></div> Aim Lock (Trava Mira)</div>
 
-            <div style="text-align:left; font-size:12px; color:#aaa;">Precision [<span id="val">0</span>]</div>
-            <input type="range" min="0" max="360" value="0" oninput="document.getElementById('val').innerText = this.value">
-
-            <div style="text-align:left; font-size:12px; color:#aaa; margin-top:10px;">Select Auxílio</div>
-            <div class="select-box" onclick="alert('Opções: Peito, Cabeça, Pescoço')">
-                <span>Peito</span> <span>▼</span>
+        <div class="section-title">Alvo do Auxílio</div>
+        <div class="select-container">
+            <div class="select-box" onclick="toggleDropdown()">
+                <span id="targetText">Peito</span> <span>▼</span>
             </div>
-
-            <div class="file-box" onclick="document.getElementById('fileIn').click()">
-                <span id="fileName">Selecionar Regedit (.lua / .txt)</span>
-                <input type="file" id="fileIn" style="display:none" onchange="document.getElementById('fileName').innerText = this.files[0].name">
+            <div class="dropdown-menu" id="targetMenu">
+                <div class="dropdown-item" onclick="setTarget('Cabeça (Headshot)')">Cabeça (Headshot)</div>
+                <div class="dropdown-item" onclick="setTarget('Pescoço (Tracking)')">Pescoço (Tracking)</div>
+                <div class="dropdown-item" onclick="setTarget('Peito (Control)')">Peito (Control)</div>
             </div>
-
-            <button class="btn-inject" onclick="window.location.href='freefire://'">Injetar Funções</button>
         </div>
 
-        <div id="info-content">
-            <p>🪪 Criador: <b>@kensx7</b></p>
-            <p>⚙️ Status: <span style="color:#00ff00">Online</span></p>
-            <p>🔑 Key: <span style="color:#7f00ff">teckblood</span></p>
-            <p>⏳ Validade: 19/03/2026</p>
-        </div>
+        <button class="btn-inject" id="btnInj" onclick="injecting()">INJETAR AUXÍLIO</button>
     </div>
 
     <script>
@@ -94,32 +77,44 @@
             } else { alert("Key Incorreta!"); }
         }
 
-        function switchTab(tab) {
-            const isFunc = tab === 'func';
-            document.getElementById('tab-func').className = isFunc ? 'tab active-tab' : 'tab';
-            document.getElementById('tab-info').className = isFunc ? 'tab' : 'tab active-tab';
-            document.getElementById('func-content').style.display = isFunc ? 'block' : 'none';
-            document.getElementById('info-content').style.display = isFunc ? 'none' : 'block';
-        }
-
         function toggleCheck(el) {
             const cb = el.querySelector('.checkbox');
             cb.classList.toggle('checked');
             cb.innerText = cb.classList.contains('checked') ? '✓' : '';
         }
 
+        function toggleDropdown() {
+            const m = document.getElementById('targetMenu');
+            m.style.display = m.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function setTarget(val) {
+            document.getElementById('targetText').innerText = val;
+            toggleDropdown();
+        }
+
+        function injecting() {
+            const btn = document.getElementById('btnInj');
+            btn.innerText = "INJETANDO...";
+            setTimeout(() => {
+                btn.innerText = "ATIVADO!";
+                setTimeout(() => window.location.href='freefire://', 800);
+            }, 1500);
+        }
+
         const canvas = document.getElementById('canvas');
         const ctx = canvas.getContext('2d');
         canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-        let particles = [];
-        for(let i=0; i<35; i++) particles.push({x:Math.random()*canvas.width, y:Math.random()*canvas.height, vx:(Math.random()-0.5)*0.7, vy:(Math.random()-0.5)*0.7});
+        let p = [];
+        for(let i=0; i<35; i++) p.push({x:Math.random()*canvas.width, y:Math.random()*canvas.height, vx:(Math.random()-0.5)*0.8, vy:(Math.random()-0.5)*0.8});
         function draw() {
             ctx.clearRect(0,0,canvas.width, canvas.height);
-            ctx.strokeStyle = 'rgba(127, 0, 255, 0.3)';
-            particles.forEach(p => {
-                p.x += p.vx; p.y += p.vy;
-                if(p.x<0 || p.x>canvas.width) p.vx *= -1;
-                if(p.y<0 || p.y>canvas.height) p.vy *= -1;
+            ctx.strokeStyle = 'rgba(127, 0, 255, 0.4)';
+            p.forEach(i => {
+                i.x+=i.vx; i.y+=i.vy;
+                if(i.x<0||i.x>canvas.width) i.vx*=-1;
+                if(i.y<0||i.y>canvas.height) i.vy*=-1;
+                ctx.beginPath(); ctx.moveTo(i.x, i.y); ctx.lineTo(i.x+2, i.y+2); ctx.stroke();
             });
             requestAnimationFrame(draw);
         }
