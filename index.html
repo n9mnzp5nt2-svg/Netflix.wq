@@ -1,76 +1,57 @@
-// Script Ultra Completo v2 - @kensx7 by sensi
-const html = `
 <!DOCTYPE html>
-<html>
+<html lang="pt-br">
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta charset="UTF-8">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>Netflix</title>
 <style>
   body { background-color: #000; color: white; font-family: -apple-system, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; overflow: hidden; }
   #canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; opacity: 0.4; }
   .container { position: relative; z-index: 2; width: 85%; background: rgba(15, 0, 30, 0.9); border: 1px solid rgba(138, 43, 226, 0.6); border-radius: 20px; padding: 25px 20px; box-shadow: 0 0 30px rgba(127, 0, 255, 0.4); text-align: center; min-height: 400px; }
   h1 { font-size: 24px; margin-bottom: 10px; font-weight: bold; text-shadow: 0 0 10px #7f00ff; }
-  
-  /* Login */
   .status-msg { font-size: 14px; height: 20px; margin-bottom: 15px; font-weight: 500; }
   .input-key { width: 100%; background: rgba(40, 40, 40, 0.5); border: 1px solid #333; padding: 15px; border-radius: 12px; color: white; margin-bottom: 20px; box-sizing: border-box; text-align: center; outline: none; }
-
-  /* Painel */
   #main-panel { display: none; }
   .tabs { display: flex; background: #1a1a1a; border-radius: 12px; margin-bottom: 20px; padding: 4px; cursor: pointer; }
   .tab { flex: 1; padding: 10px; border-radius: 10px; font-size: 13px; color: #888; }
   .active-tab { background: #7f00ff; color: white; }
-
-  /* Funções */
   .option-row { display: flex; align-items: center; margin-bottom: 12px; text-align: left; cursor: pointer; user-select: none; }
   .checkbox { width: 22px; height: 22px; border: 2px solid #7f00ff; border-radius: 6px; margin-right: 12px; display: flex; align-items: center; justify-content: center; font-size: 16px; background: transparent; transition: 0.2s; }
   .checkbox.checked { background: #7f00ff; box-shadow: 0 0 8px #7f00ff; border-color: #7f00ff; }
-  
-  /* Select Auxílio */
   .select-container { position: relative; text-align: left; margin-bottom: 15px; }
   .select-box { background: rgba(40, 40, 40, 0.5); border: 1px solid #333; padding: 12px; border-radius: 10px; color: #ccc; font-size: 14px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
   .dropdown-menu { display: none; position: absolute; width: 100%; background: #1a1a1a; border-radius: 10px; z-index: 10; margin-top: 5px; box-shadow: 0 5px 15px rgba(0,0,0,0.5); border: 1px solid #333; }
   .dropdown-item { padding: 12px; border-bottom: 1px solid #333; font-size: 14px; display: flex; justify-content: space-between; align-items: center; }
-  .dropdown-item:last-child { border: none; }
-  .symbol-check { font-size: 16px; color: white; }
-
-  /* Regedit / File */
   .file-input-container { background: rgba(40, 40, 40, 0.5); border: 1px solid #333; padding: 10px; border-radius: 10px; display: flex; align-items: center; cursor: pointer; margin-bottom: 20px; }
   .file-btn { background: #e0e0e0; color: black; padding: 4px 8px; border-radius: 5px; font-size: 11px; font-weight: bold; margin-right: 10px; }
-  
-  /* Botão Injetar */
   .btn-inject { background: #7f00ff; color: white; width: 100%; padding: 14px; border-radius: 12px; border: none; font-weight: bold; text-transform: uppercase; cursor: pointer; opacity: 0.3; pointer-events: none; transition: 0.3s; }
   .btn-inject.enabled { opacity: 1; pointer-events: auto; }
-
-  /* Info */
   #info-content { display: none; text-align: left; font-size: 14px; line-height: 1.8; }
 </style>
 </head>
 <body>
 <canvas id="canvas"></canvas>
-
 <div class="container" id="login-screen">
   <h1>@kensx7 by sensi</h1>
   <div class="status-msg" id="login-msg"></div>
   <input type="password" class="input-key" id="keyInput" placeholder="Digite sua key...">
   <button class="btn-inject enabled" onclick="checkLogin()">Acessar</button>
 </div>
-
 <div class="container" id="main-panel">
   <h1>@kensx7 by sensi</h1>
   <div class="tabs">
     <div id="tab-func" class="tab active-tab" onclick="switchTab('func')">Funções</div>
     <div id="tab-info" class="tab" onclick="switchTab('info')">Info.</div>
   </div>
-  
   <div id="func-content">
     <div class="option-row" onclick="toggleCheck(this)"><div class="checkbox"></div> Aimbot hs</div>
     <div class="option-row" onclick="toggleCheck(this)"><div class="checkbox"></div> Precision Aim</div>
     <div class="option-row" onclick="toggleCheck(this)"><div class="checkbox"></div> Norecoil</div>
     <div class="option-row" onclick="toggleCheck(this)"><div class="checkbox"></div> Head Lock</div>
-
     <div style="text-align:left; font-size:13px; margin-bottom:5px;">Precision [<span id="val">0</span>]</div>
     <input type="range" min="0" max="360" value="0" style="width:100%" oninput="document.getElementById('val').innerText = this.value">
-
     <div class="select-container">
       <div style="font-size:13px; margin-bottom:5px;">Select auxílio</div>
       <div class="select-box" onclick="toggleDropdown()">
@@ -82,17 +63,14 @@ const html = `
         <div class="dropdown-item" onclick="selectAux('pescoço')">pescoço <span class="symbol-check" id="check-pescoço"></span></div>
       </div>
     </div>
-
     <div style="text-align:left; font-size:13px; margin-bottom:5px;">Select regedit</div>
     <div class="file-input-container" onclick="document.getElementById('fileInput').click()">
       <span class="file-btn">Escolher Arquivos</span>
       <span id="fileName" style="font-size:12px; color:#888;">nenhum arquivo selecionado</span>
       <input type="file" id="fileInput" style="display:none" onchange="updateFileName(this)">
     </div>
-    
     <button id="injectBtn" class="btn-inject" onclick="window.location.href='freefire://'">Injetar Funções</button>
   </div>
-
   <div id="info-content">
     <div>🪪 criador : <b>@kensx7</b></div>
     <div>⚙️ auxílio ant ban e ant black</div>
@@ -101,40 +79,29 @@ const html = `
     <div>⏳ validade : 19/3/2k26</div>
   </div>
 </div>
-
 <script>
 let activeOptions = 0;
-
 function toggleCheck(el) {
   const cb = el.querySelector('.checkbox');
   cb.classList.toggle('checked');
-  // Ajuste para o símbolo ☑️ sem o quadrado cinza extra
   cb.innerText = cb.classList.contains('checked') ? '☑️' : '';
-  
   activeOptions = document.querySelectorAll('.checkbox.checked').length;
   const btn = document.getElementById('injectBtn');
-  if(activeOptions > 0) btn.classList.add('enabled');
-  else btn.classList.remove('enabled');
+  if(activeOptions > 0) btn.classList.add('enabled'); else btn.classList.remove('enabled');
 }
-
 function toggleDropdown() {
   const menu = document.getElementById('aux-menu');
   menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
 }
-
 function selectAux(type) {
   document.getElementById('selected-aux').innerText = type;
-  ['peito', 'cabeça', 'pescoço'].forEach(t => {
-    document.getElementById('check-'+t).innerText = (t === type) ? '☑️' : '';
-  });
+  ['peito', 'cabeça', 'pescoço'].forEach(t => { document.getElementById('check-'+t).innerText = (t === type) ? '☑️' : ''; });
   toggleDropdown();
 }
-
 function updateFileName(input) {
   const name = input.files[0] ? input.files[0].name : "nenhum arquivo selecionado";
   document.getElementById('fileName').innerText = name;
 }
-
 async function checkLogin() {
   const key = document.getElementById('keyInput').value;
   const msg = document.getElementById('login-msg');
@@ -147,13 +114,9 @@ async function checkLogin() {
     document.getElementById('main-panel').style.display = 'block';
   } else {
     msg.style.color = "#ff4444"; msg.innerText = "senha incorreta";
-    setTimeout(() => {
-      msg.innerText = "acesso ao painel negado";
-      setTimeout(() => msg.innerText = "", 2000);
-    }, 2000);
+    setTimeout(() => { msg.innerText = "acesso ao painel negado"; setTimeout(() => msg.innerText = "", 2000); }, 2000);
   }
 }
-
 function switchTab(tab) {
   const isFunc = tab === 'func';
   document.getElementById('tab-func').className = isFunc ? 'tab active-tab' : 'tab';
@@ -161,7 +124,6 @@ function switchTab(tab) {
   document.getElementById('func-content').style.display = isFunc ? 'block' : 'none';
   document.getElementById('info-content').style.display = isFunc ? 'none' : 'block';
 }
-
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 canvas.width = window.innerWidth; canvas.height = window.innerHeight;
@@ -186,8 +148,3 @@ draw();
 </script>
 </body>
 </html>
-`;
-
-let wv = new WebView();
-await wv.loadHTML(html);
-await wv.present(true);
