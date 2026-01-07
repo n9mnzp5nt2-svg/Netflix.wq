@@ -8,25 +8,37 @@
     <title>Netflix Painel</title>
     <style>
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { background-color: #000; color: white; font-family: -apple-system, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; overflow: hidden; }
+        body { background-color: #000; color: white; font-family: -apple-system, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; overflow: hidden; width: 100vw; }
         #canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; opacity: 0.4; }
         
-        .container { position: relative; z-index: 2; width: 85%; max-width: 380px; background: rgba(15, 0, 30, 0.9); border: 1px solid rgba(138, 43, 226, 0.6); border-radius: 20px; padding: 25px; box-shadow: 0 0 30px rgba(127, 0, 255, 0.4); text-align: center; }
+        .container { position: relative; z-index: 2; width: 88%; max-width: 380px; background: rgba(15, 0, 30, 0.95); border: 1px solid rgba(138, 43, 226, 0.6); border-radius: 20px; padding: 20px; box-shadow: 0 0 30px rgba(127, 0, 255, 0.4); text-align: center; }
         
-        h1 { font-size: 22px; margin-bottom: 15px; text-shadow: 0 0 10px #7f00ff; }
+        h1 { font-size: 20px; margin-bottom: 15px; text-shadow: 0 0 10px #7f00ff; }
+        
+        /* Login */
         .input-key { width: 100%; background: rgba(40, 40, 40, 0.5); border: 1px solid #333; padding: 15px; border-radius: 12px; color: white; margin-bottom: 20px; text-align: center; outline: none; font-size: 16px; }
-        
-        /* Abas e Funções */
+
+        /* Tabs */
         #main-panel { display: none; }
         .tabs { display: flex; background: #1a1a1a; border-radius: 12px; margin-bottom: 15px; padding: 4px; }
-        .tab { flex: 1; padding: 8px; border-radius: 10px; font-size: 13px; color: #888; cursor: pointer; }
+        .tab { flex: 1; padding: 10px; border-radius: 10px; font-size: 13px; color: #888; cursor: pointer; }
         .active-tab { background: #7f00ff; color: white; }
-        
-        .option-row { display: flex; align-items: center; margin-bottom: 12px; text-align: left; }
-        .checkbox { width: 22px; height: 22px; border: 2px solid #7f00ff; border-radius: 6px; margin-right: 12px; display: flex; align-items: center; justify-content: center; font-size: 14px; }
+
+        /* Funções */
+        .option-row { display: flex; align-items: center; margin-bottom: 10px; text-align: left; font-size: 14px; }
+        .checkbox { width: 20px; height: 20px; border: 2px solid #7f00ff; border-radius: 6px; margin-right: 12px; display: flex; align-items: center; justify-content: center; font-size: 12px; }
         .checkbox.checked { background: #7f00ff; }
 
-        .btn-inject { background: #7f00ff; color: white; width: 100%; padding: 14px; border-radius: 12px; border: none; font-weight: bold; text-transform: uppercase; margin-top: 10px; }
+        /* Select e Range */
+        .select-box { background: rgba(40, 40, 40, 0.5); border: 1px solid #333; padding: 10px; border-radius: 10px; color: #ccc; font-size: 13px; margin-bottom: 15px; text-align: left; display: flex; justify-content: space-between; }
+        input[type=range] { width: 100%; margin: 10px 0; accent-color: #7f00ff; }
+
+        /* File Input */
+        .file-box { background: rgba(40, 40, 40, 0.5); border: 1px dashed #7f00ff; padding: 10px; border-radius: 10px; font-size: 11px; color: #888; margin-bottom: 15px; cursor: pointer; }
+
+        .btn-inject { background: #7f00ff; color: white; width: 100%; padding: 14px; border-radius: 12px; border: none; font-weight: bold; text-transform: uppercase; cursor: pointer; }
+        
+        #info-content { display: none; text-align: left; font-size: 13px; line-height: 1.8; }
     </style>
 </head>
 <body>
@@ -41,28 +53,53 @@
     <div class="container" id="main-panel">
         <h1>@kensx7 by sensi</h1>
         <div class="tabs">
-            <div id="tab-func" class="tab active-tab">Funções</div>
-            <div id="tab-info" class="tab">Info.</div>
+            <div id="tab-func" class="tab active-tab" onclick="switchTab('func')">Funções</div>
+            <div id="tab-info" class="tab" onclick="switchTab('info')">Info.</div>
         </div>
         
         <div id="func-content">
             <div class="option-row" onclick="toggleCheck(this)"><div class="checkbox"></div> Aimbot HS</div>
             <div class="option-row" onclick="toggleCheck(this)"><div class="checkbox"></div> Precision Aim</div>
             <div class="option-row" onclick="toggleCheck(this)"><div class="checkbox"></div> No Recoil</div>
-            <div class="option-row" onclick="toggleCheck(this)"><div class="checkbox"></div> Head Lock</div>
+
+            <div style="text-align:left; font-size:12px; color:#aaa;">Precision [<span id="val">0</span>]</div>
+            <input type="range" min="0" max="360" value="0" oninput="document.getElementById('val').innerText = this.value">
+
+            <div style="text-align:left; font-size:12px; color:#aaa; margin-top:10px;">Select Auxílio</div>
+            <div class="select-box" onclick="alert('Opções: Peito, Cabeça, Pescoço')">
+                <span>Peito</span> <span>▼</span>
+            </div>
+
+            <div class="file-box" onclick="document.getElementById('fileIn').click()">
+                <span id="fileName">Selecionar Regedit (.lua / .txt)</span>
+                <input type="file" id="fileIn" style="display:none" onchange="document.getElementById('fileName').innerText = this.files[0].name">
+            </div>
+
             <button class="btn-inject" onclick="window.location.href='freefire://'">Injetar Funções</button>
+        </div>
+
+        <div id="info-content">
+            <p>🪪 Criador: <b>@kensx7</b></p>
+            <p>⚙️ Status: <span style="color:#00ff00">Online</span></p>
+            <p>🔑 Key: <span style="color:#7f00ff">teckblood</span></p>
+            <p>⏳ Validade: 19/03/2026</p>
         </div>
     </div>
 
     <script>
         function checkLogin() {
-            const key = document.getElementById('keyInput').value;
-            if (key === "teckblood") {
+            if (document.getElementById('keyInput').value === "teckblood") {
                 document.getElementById('login-screen').style.display = 'none';
                 document.getElementById('main-panel').style.display = 'block';
-            } else {
-                alert("Key Incorreta!");
-            }
+            } else { alert("Key Incorreta!"); }
+        }
+
+        function switchTab(tab) {
+            const isFunc = tab === 'func';
+            document.getElementById('tab-func').className = isFunc ? 'tab active-tab' : 'tab';
+            document.getElementById('tab-info').className = isFunc ? 'tab' : 'tab active-tab';
+            document.getElementById('func-content').style.display = isFunc ? 'block' : 'none';
+            document.getElementById('info-content').style.display = isFunc ? 'none' : 'block';
         }
 
         function toggleCheck(el) {
@@ -71,7 +108,6 @@
             cb.innerText = cb.classList.contains('checked') ? '✓' : '';
         }
 
-        // Animação do Fundo
         const canvas = document.getElementById('canvas');
         const ctx = canvas.getContext('2d');
         canvas.width = window.innerWidth; canvas.height = window.innerHeight;
