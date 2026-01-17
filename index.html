@@ -1,124 +1,179 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Netflix Painel</title>
-    <style>
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
-        body { background-color: #000; color: white; font-family: -apple-system, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; overflow: hidden; width: 100vw; }
-        #canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; opacity: 0.3; }
-        
-        .container { position: relative; z-index: 2; width: 88%; max-width: 380px; background: rgba(10, 10, 20, 0.98); border: 1px solid #7f00ff; border-radius: 20px; padding: 25px; box-shadow: 0 0 40px rgba(127, 0, 255, 0.5); text-align: center; }
-        
-        /* Nome da tela de login igual ao original */
-        h1 { font-size: 22px; margin-bottom: 20px; font-weight: bold; text-shadow: 0 0 15px #7f00ff; color: #fff; }
-        
-        .input-key { width: 100%; background: #1a1a1a; border: 1px solid #333; padding: 15px; border-radius: 12px; color: white; margin-bottom: 20px; text-align: center; font-size: 16px; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Painel Nubank</title>
+<style>
+  body { background-color: #000; color: white; font-family: -apple-system, sans-serif; margin: 0; padding: 20px; height: 100vh; display: flex; flex-direction: column; box-sizing: border-box; overflow: hidden; }
+  
+  #login-screen { display: flex; flex-direction: column; height: 100%; }
+  .welcome-text { font-size: 24px; font-weight: bold; margin-bottom: 10px; line-height: 1.2; margin-top: 20px; }
+  .sub-text { font-size: 15px; color: #888; margin-bottom: 30px; }
+  .input-container { border-bottom: 1px solid #333; padding-bottom: 8px; }
+  .input-key { width: 100%; background: transparent; border: none; color: #fff; font-size: 24px; outline: none; }
+  .footer { margin-top: auto; padding-bottom: 5vh; }
+  .btn-continue { background: #8A05BE; color: white; width: 100%; padding: 16px; border-radius: 30px; border: none; font-weight: bold; font-size: 18px; cursor: pointer; }
 
-        #main-panel { display: none; }
-        .section-title { font-size: 11px; color: #7f00ff; text-align: left; margin: 10px 0 5px 5px; text-transform: uppercase; font-weight: bold; }
-        
-        .option-row { display: flex; align-items: center; background: rgba(255,255,255,0.03); padding: 12px; border-radius: 10px; margin-bottom: 8px; cursor: pointer; border: 1px solid transparent; font-size: 14px; }
-        .checkbox { width: 18px; height: 18px; border: 2px solid #7f00ff; border-radius: 4px; margin-right: 12px; display: flex; align-items: center; justify-content: center; font-size: 12px; }
-        .checkbox.checked { background: #7f00ff; box-shadow: 0 0 10px #7f00ff; }
+  #main-panel { display: none; text-align: center; position: relative; height: 100%; justify-content: center; align-items: center; flex-direction: column; overflow: hidden; }
+  #canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; opacity: 0.4; pointer-events: none; }
+  
+  /* Ajuste no container para não estourar a tela */
+  .container-original { position: relative; z-index: 2; background: rgba(15, 0, 30, 0.9); border: 1px solid rgba(138, 43, 226, 0.6); border-radius: 20px; padding: 15px; box-shadow: 0 0 30px rgba(127, 0, 255, 0.4); width: 100%; display: flex; flex-direction: column; max-height: 90vh; box-sizing: border-box; }
+  
+  h1 { font-size: 20px; margin-bottom: 12px; font-weight: bold; text-shadow: 0 0 10px #8A05BE; text-transform: uppercase; letter-spacing: 1px; margin-top: 0; }
+  
+  .tabs { display: flex; background: #1a1a1a; border-radius: 12px; margin-bottom: 15px; padding: 4px; gap: 4px; }
+  .tab { flex: 1; padding: 8px 2px; border-radius: 10px; font-size: 9px; color: #888; cursor: pointer; white-space: nowrap; text-transform: uppercase; font-weight: bold; }
+  .active-tab { background: #8A05BE; color: white; }
 
-        /* Menu de Seleção Funcional */
-        .select-container { position: relative; margin-bottom: 15px; }
-        .select-box { background: #1a1a1a; border: 1px solid #333; padding: 12px; border-radius: 10px; font-size: 13px; display: flex; justify-content: space-between; cursor: pointer; }
-        .dropdown-menu { display: none; position: absolute; width: 100%; background: #111; border-radius: 10px; z-index: 100; margin-top: 5px; border: 1px solid #333; }
-        .dropdown-item { padding: 12px; font-size: 13px; border-bottom: 1px solid #222; text-align: left; }
+  .option-row { display: flex; justify-content: space-between; align-items: center; background: rgba(255, 255, 255, 0.05); margin-bottom: 6px; padding: 10px 12px; border-radius: 10px; border: 1px solid rgba(138, 5, 190, 0.3); font-size: 13px; text-align: left; }
+  .checkbox { width: 34px; height: 18px; background: #333; border-radius: 15px; position: relative; transition: 0.3s; flex-shrink: 0; }
+  .checkbox.checked { background: #8A05BE; }
+  .checkbox::after { content: ''; position: absolute; width: 12px; height: 12px; background: white; border-radius: 50%; top: 3px; left: 3px; transition: 0.3s; }
+  .checkbox.checked::after { left: 19px; }
 
-        .btn-inject { background: linear-gradient(45deg, #7f00ff, #a020f0); color: white; width: 100%; padding: 16px; border-radius: 12px; border: none; font-weight: bold; margin-top: 15px; cursor: pointer; }
-    </style>
+  #precision-container { display: none; margin-top: 5px; text-align: left; padding: 0 10px 10px 10px; }
+  .slider-label { font-size: 11px; color: #aaa; margin-bottom: 5px; display: block; }
+  input[type=range] { width: 100%; accent-color: #8A05BE; cursor: pointer; }
+
+  .white-ball { width: 45px; height: 45px; background: white; border-radius: 50%; margin: 10px auto; cursor: pointer; box-shadow: 0 0 15px white; }
+  #terminal { background: rgba(0,0,0,0.8); border-radius: 10px; padding: 10px; height: 150px; overflow-y: auto; text-align: left; font-family: monospace; font-size: 10px; border: 1px solid #333; margin-top: 5px; }
+  .log-green { color: #00ff00; margin: 2px 0; display: block; white-space: pre; }
+
+  /* BOTÃO AJUSTADO AQUI */
+  .btn-inject { background: #8A05BE; color: white; width: 100%; padding: 12px; border-radius: 12px; border: none; font-weight: bold; font-size: 14px; text-transform: uppercase; margin-top: 10px; opacity: 0.4; pointer-events: none; transition: 0.3s; display: block; text-decoration: none; text-align: center; box-sizing: border-box; }
+  .btn-inject.enabled { opacity: 1; pointer-events: auto; }
+</style>
 </head>
 <body>
-    <canvas id="canvas"></canvas>
 
-    <div class="container" id="login-screen">
-        <h1>@kensx7 by sensi</h1>
-        <input type="password" class="input-key" id="keyInput" placeholder="Digite sua key...">
-        <button class="btn-inject" onclick="checkLogin()">ACESSAR</button>
+<div id="login-screen">
+  <div class="welcome-text">Boas-vindas ao Nubank!<br>Qual o seu CPF?</div>
+  <div class="sub-text">Precisamos dele para iniciar o seu cadastro ou acessar o aplicativo</div>
+  <div class="input-container">
+    <input type="text" class="input-key" id="keyInput" placeholder="000.000.000-00">
+  </div>
+  <div id="login-msg" style="color:#ff4444; font-size:14px; margin-top:10px;"></div>
+  <div class="footer">
+    <button class="btn-continue" onclick="checkLogin()">Continuar</button>
+  </div>
+</div>
+
+<div id="main-panel">
+  <canvas id="canvas"></canvas>
+  <div class="container-original">
+    <h1>painel nubank</h1>
+    <div class="tabs">
+      <div id="tab-aimbot" class="tab active-tab" onclick="switchTab('aimbot')">Aimbot</div>
+      <div id="tab-extra" class="tab" onclick="switchTab('extra')">Funções Extra</div>
+      <div id="tab-bypass" class="tab" onclick="switchTab('bypass')">injetar bypass</div>
+    </div>
+    
+    <div id="aimbot-content">
+      <div class="option-row" onclick="toggleCheck(this)"><span>Assist Lock (Fov)</span> <div class="checkbox"></div></div>
+      <div class="option-row" onclick="toggleCheck(this)"><span>No Recoil (Safety)</span> <div class="checkbox"></div></div>
+      <div class="option-row" onclick="toggleCheck(this)"><span>FPS boost 120Hz</span> <div class="checkbox"></div></div>
+      <div class="option-row" onclick="toggleCheck(this, true)"><span>Precision AIM</span> <div class="checkbox"></div></div>
+      <div id="precision-container">
+        <span class="slider-label">precision fov [<span id="val">0</span>]</span>
+        <input type="range" min="0" max="360" value="0" oninput="document.getElementById('val').innerText = this.value">
+      </div>
+      <a id="injectBtn" class="btn-inject" href="freefire://">AUTORIZAR E INJETAR</a>
     </div>
 
-    <div class="container" id="main-panel">
-        <h1>@kensx7 by sensi</h1>
-        
-        <div class="section-title">Estabilização</div>
-        <div class="option-row" onclick="toggleCheck(this)"><div class="checkbox"></div> Anti-Shake (Sem Tremedeira)</div>
-        <div class="option-row" onclick="toggleCheck(this)"><div class="checkbox"></div> Fix Lag (Otimizar FPS)</div>
-        
-        <div class="section-title">Precisão</div>
-        <div class="option-row" onclick="toggleCheck(this)"><div class="checkbox"></div> Calibração Regedit</div>
-        <div class="option-row" onclick="toggleCheck(this)"><div class="checkbox"></div> Aim Lock (Trava Mira)</div>
-
-        <div class="section-title">Alvo do Auxílio</div>
-        <div class="select-container">
-            <div class="select-box" onclick="toggleDropdown()">
-                <span id="targetText">Peito</span> <span>▼</span>
-            </div>
-            <div class="dropdown-menu" id="targetMenu">
-                <div class="dropdown-item" onclick="setTarget('Cabeça (Headshot)')">Cabeça (Headshot)</div>
-                <div class="dropdown-item" onclick="setTarget('Pescoço (Tracking)')">Pescoço (Tracking)</div>
-                <div class="dropdown-item" onclick="setTarget('Peito (Control)')">Peito (Control)</div>
-            </div>
-        </div>
-
-        <button class="btn-inject" id="btnInj" onclick="injecting()">INJETAR AUXÍLIO</button>
+    <div id="extra-content" style="display:none">
+      <div class="option-row" onclick="toggleCheck(this)"><span>otimizar ping</span> <div class="checkbox"></div></div>
+      <div class="option-row" onclick="toggleCheck(this)"><span>tirar tremedeira</span> <div class="checkbox"></div></div>
+      <div class="option-row" onclick="toggleCheck(this)"><span>no recuo de bala</span> <div class="checkbox"></div></div>
     </div>
 
-    <script>
-        function checkLogin() {
-            if (document.getElementById('keyInput').value === "teckblood") {
-                document.getElementById('login-screen').style.display = 'none';
-                document.getElementById('main-panel').style.display = 'block';
-            } else { alert("Key Incorreta!"); }
-        }
+    <div id="bypass-content" style="display:none">
+      <div class="white-ball" onclick="startInjection()"></div>
+      <div id="terminal">
+        <div id="terminal-title" style="color:#888; margin-bottom:5px;">Aguardando início...</div>
+        <div id="logs"></div>
+      </div>
+    </div>
+  </div>
+</div>
 
-        function toggleCheck(el) {
-            const cb = el.querySelector('.checkbox');
-            cb.classList.toggle('checked');
-            cb.innerText = cb.classList.contains('checked') ? '✓' : '';
-        }
+<script>
+// (O script permanece o mesmo para manter a lógica original)
+const logsData = [
+  "> bypass full ativado", "> xit hs ativado", "> aimbot ativado", 
+  "> otimizações ativadas", "> painel nubank ativado", "> xit external ativado", 
+  "> anti blacklist ativado", "> anti ban ativado", "> injetando código headtrick <"
+];
 
-        function toggleDropdown() {
-            const m = document.getElementById('targetMenu');
-            m.style.display = m.style.display === 'block' ? 'none' : 'block';
-        }
+const pythonCode = `import time\nimport threading\nclass Aimbot:\n  def activate(self):\n    print("AIMBOT ON")`.split('\n');
 
-        function setTarget(val) {
-            document.getElementById('targetText').innerText = val;
-            toggleDropdown();
-        }
+function startInjection() {
+  const logContainer = document.getElementById('logs');
+  const title = document.getElementById('terminal-title');
+  logContainer.innerHTML = '';
+  title.innerText = 'Injetando...';
+  title.style.color = '#00ff00';
+  let delay = 0;
+  logsData.forEach((text, i) => {
+    setTimeout(() => {
+      const div = document.createElement('div');
+      div.className = 'log-green';
+      div.innerText = text;
+      logContainer.appendChild(div);
+      logContainer.scrollTop = logContainer.scrollHeight;
+    }, delay);
+    delay += 400;
+  });
+}
 
-        function injecting() {
-            const btn = document.getElementById('btnInj');
-            btn.innerText = "INJETANDO...";
-            setTimeout(() => {
-                btn.innerText = "ATIVADO!";
-                setTimeout(() => window.location.href='freefire://', 800);
-            }, 1500);
-        }
+function checkLogin() {
+  const key = document.getElementById('keyInput').value;
+  if (key.toLowerCase() === "kn10") {
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('main-panel').style.display = 'flex';
+    draw(); 
+  } else {
+    document.getElementById('login-msg').innerText = "Senha incorreta.";
+  }
+}
 
-        const canvas = document.getElementById('canvas');
-        const ctx = canvas.getContext('2d');
-        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-        let p = [];
-        for(let i=0; i<35; i++) p.push({x:Math.random()*canvas.width, y:Math.random()*canvas.height, vx:(Math.random()-0.5)*0.8, vy:(Math.random()-0.5)*0.8});
-        function draw() {
-            ctx.clearRect(0,0,canvas.width, canvas.height);
-            ctx.strokeStyle = 'rgba(127, 0, 255, 0.4)';
-            p.forEach(i => {
-                i.x+=i.vx; i.y+=i.vy;
-                if(i.x<0||i.x>canvas.width) i.vx*=-1;
-                if(i.y<0||i.y>canvas.height) i.vy*=-1;
-                ctx.beginPath(); ctx.moveTo(i.x, i.y); ctx.lineTo(i.x+2, i.y+2); ctx.stroke();
-            });
-            requestAnimationFrame(draw);
-        }
-        draw();
-    </script>
+function switchTab(tab) {
+  ['aimbot', 'extra', 'bypass'].forEach(t => {
+    document.getElementById('tab-' + t).className = (t === tab) ? 'tab active-tab' : 'tab';
+    document.getElementById(t + '-content').style.display = (t === tab) ? 'block' : 'none';
+  });
+}
+
+function toggleCheck(el, isPrecision = false) {
+  const cb = el.querySelector('.checkbox');
+  cb.classList.toggle('checked');
+  if (isPrecision) {
+    document.getElementById('precision-container').style.display = cb.classList.contains('checked') ? 'block' : 'none';
+  }
+  const active = document.querySelectorAll('#aimbot-content .checkbox.checked').length;
+  const btn = document.getElementById('injectBtn');
+  if(active > 0) btn.classList.add('enabled');
+  else btn.classList.remove('enabled');
+}
+
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+let particles = [];
+function draw() {
+  canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+  if(particles.length === 0) {
+    for(let i=0; i<35; i++) particles.push({x:Math.random()*canvas.width, y:Math.random()*canvas.height, vx:(Math.random()-0.5)*0.7, vy:(Math.random()-0.5)*0.7});
+  }
+  ctx.clearRect(0,0,canvas.width, canvas.height);
+  ctx.strokeStyle = 'rgba(138, 5, 190, 0.3)';
+  particles.forEach(p => {
+    p.x += p.vx; p.y += p.vy;
+    if(p.x<0 || p.x>canvas.width) p.vx *= -1;
+    if(p.y<0 || p.y>canvas.height) p.vy *= -1;
+  });
+  requestAnimationFrame(draw);
+}
+</script>
 </body>
 </html>
